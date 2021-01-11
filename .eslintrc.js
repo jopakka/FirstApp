@@ -1,10 +1,16 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   parser: "babel-eslint",
   env: {
     browser: true,
     es2020: true,
   },
-  extends: ["google", "eslint:recommended", "plugin:react/recommended"],
+  extends: [
+    "google",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+  ],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -16,12 +22,13 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react", "react-native"],
+  plugins: ["react", "react-native", "prettier"],
   rules: {
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "no-console": 0,
     "require-jsdoc": 0,
+    "prettier/prettier": "error",
   },
   settings: {
     react: {
