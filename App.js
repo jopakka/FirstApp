@@ -8,7 +8,8 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from './styles/GlobalStyles';
+import FlatListStyles from './styles/FlatListStyles';
 
 const mediaArray = [
   {
@@ -50,14 +51,14 @@ const App = () => {
         data={mediaArray}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity>
+            <TouchableOpacity style={FlatListStyles.item}>
               <Image
-                style={{width: 100, height: 100}}
+                style={FlatListStyles.image}
                 source={{uri: item.thumbnails.w160}}
               />
-              <View>
-                <Text>{item.title}</Text>
-                <Text>{item.description}</Text>
+              <View style={FlatListStyles.textBox}>
+                <Text style={FlatListStyles.title}>{item.title}</Text>
+                <Text style={FlatListStyles.text}>{item.description}</Text>
               </View>
             </TouchableOpacity>
           );
