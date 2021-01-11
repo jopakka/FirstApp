@@ -6,7 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  SafeAreaView,
 } from 'react-native';
+import GlobalStyles from './GlobalStyles';
 
 const mediaArray = [
   {
@@ -43,7 +45,7 @@ const mediaArray = [
 
 const App = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={GlobalStyles.droidSafeArea}>
       <FlatList
         data={mediaArray}
         renderItem={({item}) => {
@@ -61,17 +63,8 @@ const App = () => {
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
