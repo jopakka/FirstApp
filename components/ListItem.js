@@ -6,6 +6,7 @@ import {
   Text,
   Modal,
   StyleSheet,
+  Button,
   Alert,
 } from 'react-native';
 import FlatListStyles from '../styles/FlatListStyles';
@@ -28,32 +29,38 @@ const ListItem = ({singleMedia}) => {
         <Text style={FlatListStyles.text}>{singleMedia.description}</Text>
       </View>
       <Modal
+        style={styles.modal}
         visible={modalVis}
         transparent={true}
         onRequestClose={() => setModalVis(false)}
       >
-        <Image
-          style={styles.modalImage}
-          source={{uri: singleMedia.filename}}
-          onPress={() => Alert.alert('image pressed')}
-        />
+        <TouchableOpacity
+          style={styles.modal}
+          onPress={() => setModalVis(false)}
+        >
+          <Image
+            style={styles.modalImage}
+            source={{uri: singleMedia.filename}}
+            onPress={() => setModalVis(false)}
+          />
+        </TouchableOpacity>
       </Modal>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  modalView: {
-    backgroundColor: 'blue',
-  },
-  modalImage: {
-    width: '100%',
-    height: 400,
-  },
-});
-
 ListItem.propTypes = {
   singleMedia: PropTypes.object.isRequired,
 };
+
+const styles = StyleSheet.create({
+  modal: {
+    backgroundColor: '#000000AA',
+    height: '100%',
+  },
+  modalImage: {
+    height: 300,
+  },
+});
 
 export default ListItem;

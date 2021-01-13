@@ -1,16 +1,24 @@
 import {StyleSheet} from 'react-native';
+
 export default StyleSheet.create({
   item: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'lightgrey',
-    marginBottom: 10,
-    padding: 15,
+    backgroundColor: '#32CD32',
+    padding: 8,
+    marginBottom: 16,
+    borderStyle: 'solid',
+    borderWidth: 3,
+    borderColor: 'darkgreen',
+    borderRadius: 10,
+    elevation: 3,
+    shadowOffset: {width: 3, height: 3},
   },
   image: {
-    flex: 2,
-    height: 300,
-    marginEnd: 15,
+    flex: 4,
+    height: 120,
+    marginEnd: 8,
+    borderRadius: 8,
   },
   textBox: {
     flex: 3,
@@ -18,6 +26,7 @@ export default StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 20,
+    color: 'white',
   },
   text: {
     fontSize: 15,
