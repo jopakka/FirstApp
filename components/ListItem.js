@@ -35,7 +35,7 @@ const ListItem = ({singleMedia}) => {
         onRequestClose={() => setModalVis(false)}
       >
         <TouchableOpacity
-          style={styles.modal}
+          style={styles.modalTouch}
           onPress={() => setModalVis(false)}
         >
           <Image
@@ -56,7 +56,13 @@ ListItem.propTypes = {
 const styles = StyleSheet.create({
   modal: {
     backgroundColor: '#000000AA',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTouch: {
     height: '100%',
+    backgroundColor: '#000000AA',
+    justifyContent: 'center',
   },
   modalImage: {
     height: 300,
