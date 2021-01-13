@@ -8,12 +8,12 @@ export default StyleSheet.create({
     padding: 15,
   },
   image: {
-    flex: 4,
+    flex: 2,
     height: 300,
     marginEnd: 15,
   },
   textBox: {
-    flex: 6,
+    flex: 3,
   },
   title: {
     fontWeight: 'bold',
