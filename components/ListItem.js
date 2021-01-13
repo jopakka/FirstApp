@@ -18,7 +18,7 @@ const ListItem = ({singleMedia}) => {
   );
 };
 
-ListItem.PropTypes = {
+ListItem.propTypes = {
   singleMedia: PropTypes.object.isRequired,
 };
 
