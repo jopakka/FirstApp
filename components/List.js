@@ -2,21 +2,35 @@ import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import ListItem from './ListItem';
 
-const url =
-  'https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json';
+const url = 'http://media.mw.metropolia.fi/wbma/';
 
 const List = () => {
   const [mediaArray, setMediaArray] = useState([]);
 
   const loadMedia = async () => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url + 'media');
       const json = await response.json();
-      console.log(json);
-      setMediaArray(json);
+      const media = await loadThumb(json);
+      console.log('media', media);
+      setMediaArray(media);
     } catch (e) {
       console.error('List loadMedia', e.message);
     }
+  };
+
+  const loadThumb = async (array) => {
+    return await Promise.all(
+      array.map(async (item) => {
+        try {
+          const response = await fetch(url + 'media/' + item.file_id);
+          const json = await response.json();
+          return json;
+        } catch (e) {
+          console.error('List loadThumb', e.message);
+        }
+      })
+    );
   };
 
   useEffect(() => {

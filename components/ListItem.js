@@ -12,6 +12,8 @@ import {
 import FlatListStyles from '../styles/FlatListStyles';
 import PropTypes from 'prop-types';
 
+const url = 'http://media.mw.metropolia.fi/wbma/';
+
 const ListItem = ({singleMedia}) => {
   const [modalVis, setModalVis] = useState(false);
 
@@ -22,7 +24,7 @@ const ListItem = ({singleMedia}) => {
     >
       <Image
         style={FlatListStyles.image}
-        source={{uri: singleMedia.thumbnails.w160}}
+        source={{uri: url + 'uploads/' + singleMedia.thumbnails.w160}}
       />
       <View style={FlatListStyles.textBox}>
         <Text style={FlatListStyles.title}>{singleMedia.title}</Text>
