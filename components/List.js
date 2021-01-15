@@ -11,7 +11,7 @@ const List = () => {
     try {
       const response = await fetch(url + 'media');
       const json = await response.json();
-      const media = await loadThumb(json);
+      const media = await loadMediaInfo(json);
       console.log('media', media);
       setMediaArray(media);
     } catch (e) {
@@ -19,7 +19,7 @@ const List = () => {
     }
   };
 
-  const loadThumb = async (array) => {
+  const loadMediaInfo = async (array) => {
     return await Promise.all(
       array.map(async (item) => {
         try {
