@@ -27,7 +27,7 @@ const List = () => {
     <FlatList
       style={styles.list}
       data={mediaArray}
-      keyExtractor={(_key, index) => index.toString()}
+      keyExtractor={(_item, index) => index.toString()}
       renderItem={({item}) => <ListItem singleMedia={item} />}
     />
   );
