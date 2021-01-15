@@ -42,7 +42,7 @@ const ListItem = ({singleMedia}) => {
         >
           <Image
             style={styles.modalImage}
-            source={{uri: singleMedia.filename}}
+            source={{uri: url + 'uploads/' + singleMedia.filename}}
             onPress={() => setModalVis(false)}
           />
         </TouchableOpacity>
