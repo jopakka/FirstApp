@@ -9,7 +9,7 @@ const ListItem = ({singleMedia, navigation}) => {
   return (
     <TouchableOpacity
       style={FlatListStyles.item}
-      onPress={() => navigation.navigate('Single')}
+      onPress={() => navigation.navigate('Single', {media: singleMedia})}
     >
       <Image
         style={FlatListStyles.image}
