@@ -1,21 +1,19 @@
 import React from 'react';
-import {SafeAreaView, Text, Image, StyleSheet} from 'react-native';
-import GlobalStyles from '../styles/GlobalStyles';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
-
-const baseUrl = 'http://media.mw.metropolia.fi/wbma/uploads/';
+import {uploadsUrl} from '../utils/variables';
 
 const Single = ({route}) => {
   return (
-    <SafeAreaView style={GlobalStyles.droidSafeArea}>
+    <View>
       <Image
-        source={{uri: baseUrl + route.params.media.filename}}
+        source={{uri: uploadsUrl + route.params.media.filename}}
         style={styles.img}
       />
       <Text style={styles.title}>{route.params.media.title}</Text>
       <Text style={styles.desc}>{route.params.media.description}</Text>
       <StatusBar style="auto" backgroundColor="orange" />
-    </SafeAreaView>
+    </View>
   );
 };
 

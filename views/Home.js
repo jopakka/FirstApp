@@ -1,16 +1,15 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
-import GlobalStyles from '../styles/GlobalStyles';
+import {View, StyleSheet} from 'react-native';
 import List from '../components/List';
 import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
 
-const Home = ({navigation}) => {
+const Home = (props) => {
   return (
-    <SafeAreaView style={GlobalStyles.droidSafeArea}>
-      <List style={styles.list} navigation={navigation} />
+    <View>
+      <List navigation={props.navigation} />
       <StatusBar style="auto" backgroundColor="orange" />
-    </SafeAreaView>
+    </View>
   );
 };
 

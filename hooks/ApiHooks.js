@@ -1,13 +1,12 @@
 import {useState, useEffect} from 'react';
-
-const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
+import {baseUrl} from '../utils/variables';
 
 const useLoadMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
 
   const loadMedia = async () => {
     try {
-      const response = await fetch(apiUrl + 'media');
+      const response = await fetch(baseUrl + 'media');
       const json = await response.json();
       const media = await loadMediaInfo(json);
       setMediaArray(media);
@@ -20,7 +19,7 @@ const useLoadMedia = () => {
     return await Promise.all(
       array.map(async (item) => {
         try {
-          const response = await fetch(apiUrl + 'media/' + item.file_id);
+          const response = await fetch(baseUrl + 'media/' + item.file_id);
           const json = await response.json();
           return json;
         } catch (e) {
