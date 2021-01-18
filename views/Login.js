@@ -1,18 +1,32 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {StyleSheet, SafeAreaView, Text, Button} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
-  const logIn = () => {
+
+  const logIn = async () => {
     setIsLoggedIn(true);
-    if (isLoggedIn) {
-      // this is to make sure isLoggedIn has changed, will be removed later
+    await AsyncStorage.setItem('userToken', 'abc');
+    navigation.navigate('Home');
+  };
+
+  const getToken = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
+    console.log('token', userToken);
+    if (userToken === 'abc') {
+      setIsLoggedIn(true);
       navigation.navigate('Home');
     }
   };
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Text>Login</Text>
