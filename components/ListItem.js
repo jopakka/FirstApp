@@ -1,26 +1,15 @@
-import React, {useState} from 'react';
-import {
-  TouchableOpacity,
-  Image,
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  Button,
-  Alert,
-} from 'react-native';
+import React from 'react';
+import {TouchableOpacity, Image, View, Text, StyleSheet} from 'react-native';
 import FlatListStyles from '../styles/FlatListStyles';
 import PropTypes from 'prop-types';
 
 const url = 'http://media.mw.metropolia.fi/wbma/';
 
-const ListItem = ({singleMedia}) => {
-  const [modalVis, setModalVis] = useState(false);
-
+const ListItem = ({singleMedia, navigation}) => {
   return (
     <TouchableOpacity
       style={FlatListStyles.item}
-      onPress={() => setModalVis(true)}
+      onPress={() => navigation.navigate('Single')}
     >
       <Image
         style={FlatListStyles.image}
@@ -30,29 +19,13 @@ const ListItem = ({singleMedia}) => {
         <Text style={FlatListStyles.title}>{singleMedia.title}</Text>
         <Text style={FlatListStyles.text}>{singleMedia.description}</Text>
       </View>
-      <Modal
-        style={styles.modal}
-        visible={modalVis}
-        transparent={true}
-        onRequestClose={() => setModalVis(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalTouch}
-          onPress={() => setModalVis(false)}
-        >
-          <Image
-            style={styles.modalImage}
-            source={{uri: url + 'uploads/' + singleMedia.filename}}
-            onPress={() => setModalVis(false)}
-          />
-        </TouchableOpacity>
-      </Modal>
     </TouchableOpacity>
   );
 };
 
 ListItem.propTypes = {
   singleMedia: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({

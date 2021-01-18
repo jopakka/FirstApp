@@ -1,9 +1,8 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import Home from './views/Home';
+import Navigator from './navigators/Navigator';
 
 const App = () => {
-  return <Home></Home>;
+  return <Navigator />;
 };
 
 export default App;
