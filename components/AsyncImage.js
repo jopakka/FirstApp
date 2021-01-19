@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
 import PropTypes from 'prop-types';
 
-const AsyncImage = ({style, source}) => {
+const AsyncImage = ({style, source, indicatorColor}) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const onLoad = () => setIsLoaded(true);
@@ -13,7 +13,7 @@ const AsyncImage = ({style, source}) => {
       {!isLoaded && (
         <ActivityIndicator
           size="large"
-          color="white"
+          color={indicatorColor || 'white'}
           style={[style, styles.indicator]}
         />
       )}
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
 AsyncImage.propTypes = {
   style: PropTypes.object,
   source: PropTypes.object.isRequired,
+  indicatorColor: PropTypes.string,
 };
 
 export default AsyncImage;
