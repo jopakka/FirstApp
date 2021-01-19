@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, Image} from 'react-native';
+import {TouchableOpacity, View, Text} from 'react-native';
 import FlatListStyles from '../styles/FlatListStyles';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';

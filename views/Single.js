@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import {uploadsUrl} from '../utils/variables';
 import AsyncImage from '../components/AsyncImage';
