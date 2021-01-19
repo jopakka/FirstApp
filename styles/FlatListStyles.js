@@ -15,7 +15,8 @@ export default StyleSheet.create({
     shadowOffset: {width: 3, height: 3},
   },
   image: {
-    flex: 4,
+    flex: 2,
+    width: '100%',
     height: 120,
     marginEnd: 8,
     borderRadius: 8,

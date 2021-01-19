@@ -3,6 +3,7 @@ import {TouchableOpacity, View, Text, Image} from 'react-native';
 import FlatListStyles from '../styles/FlatListStyles';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
+import AsyncImage from './AsyncImage';
 
 const ListItem = ({singleMedia, navigation}) => {
   return (
@@ -10,7 +11,7 @@ const ListItem = ({singleMedia, navigation}) => {
       style={FlatListStyles.item}
       onPress={() => navigation.navigate('Single', {media: singleMedia})}
     >
-      <Image
+      <AsyncImage
         style={FlatListStyles.image}
         source={{uri: uploadsUrl + singleMedia.thumbnails.w160}}
       />
