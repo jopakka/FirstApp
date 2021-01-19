@@ -2,11 +2,12 @@ import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import {uploadsUrl} from '../utils/variables';
+import AsyncImage from '../components/AsyncImage';
 
 const Single = ({route}) => {
   return (
     <View>
-      <Image
+      <AsyncImage
         source={{uri: uploadsUrl + route.params.media.filename}}
         style={styles.img}
       />
@@ -20,6 +21,7 @@ const Single = ({route}) => {
 const styles = StyleSheet.create({
   img: {
     height: 300,
+    width: '100%',
   },
   title: {
     fontSize: 20,
