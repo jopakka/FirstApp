@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLogin} from '../hooks/ApiHooks';
-import {baseUrl} from '../utils/variables';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 const Login = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
@@ -47,7 +48,8 @@ const Login = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>Login</Text>
-      <Button title="Sign in!" onPress={logIn} />
+      <LoginForm navigation={navigation} />
+      <RegisterForm navigation={navigation} />
       <StatusBar style="auto" backgroundColor="orange" />
     </SafeAreaView>
   );
