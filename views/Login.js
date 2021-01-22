@@ -46,9 +46,19 @@ const Login = ({navigation}) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
-            <Text>Login</Text>
-            <LoginForm navigation={navigation} />
-            <RegisterForm navigation={navigation} />
+            <LoginForm
+              navigation={navigation}
+              style={styles.smallSpace}
+              titleStyle={styles.title}
+              inputStyle={styles.input}
+              buttonColor={'#32CD32'}
+            />
+            <RegisterForm
+              navigation={navigation}
+              titleStyle={styles.title}
+              inputStyle={styles.input}
+              buttonColor={'#32CD32'}
+            />
             <StatusBar style="auto" backgroundColor="orange" />
           </View>
         </TouchableWithoutFeedback>
@@ -64,12 +74,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
+  smallSpace: {
+    marginBottom: 30,
+  },
   keyboard: {
     flex: 1,
     width: '100%',
   },
+  input: {
+    marginBottom: 8,
+  },
   inner: {
     padding: '20%',
+  },
+  title: {
+    fontSize: 24,
   },
 });
 

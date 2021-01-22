@@ -7,7 +7,13 @@ import {register, login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const RegisterForm = ({navigation}) => {
+const RegisterForm = ({
+  navigation,
+  style,
+  titleStyle,
+  inputStyle,
+  buttonColor,
+}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
 
@@ -28,36 +34,44 @@ const RegisterForm = ({navigation}) => {
   };
 
   return (
-    <View>
-      <Text>Register:</Text>
+    <View style={style}>
+      <Text style={titleStyle}>Register:</Text>
       <FormTextInput
         autoCapitalize="none"
-        placeholder="username"
+        placeholder="Username"
+        style={inputStyle}
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
       <FormTextInput
         autoCapitalize="none"
-        placeholder="password"
+        placeholder="Password"
+        style={inputStyle}
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
       <FormTextInput
         autoCapitalize="none"
-        placeholder="email"
+        placeholder="Email"
+        style={inputStyle}
         onChangeText={(txt) => handleInputChange('email', txt)}
       />
       <FormTextInput
         autoCapitalize="none"
-        placeholder="full name"
+        placeholder="Full name"
+        style={inputStyle}
         onChangeText={(txt) => handleInputChange('full_name', txt)}
       />
-      <Button title="Register!" onPress={doRegister} />
+      <Button title="Register" color={buttonColor} onPress={doRegister} />
     </View>
   );
 };
 
 RegisterForm.propTypes = {
   navigation: PropTypes.object,
+  style: PropTypes.object,
+  titleStyle: PropTypes.object,
+  inputStyle: PropTypes.object,
+  buttonColor: PropTypes.string,
 };
 
 export default RegisterForm;
