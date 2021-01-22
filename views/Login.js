@@ -1,5 +1,10 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, SafeAreaView, Text, Button} from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
@@ -7,10 +12,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLogin} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {login} from '../hooks/ApiHooks';
 
 const Login = ({navigation}) => {
-  const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
+  const {setIsLoggedIn} = useContext(MainContext);
   const {checkToken} = useLogin();
 
   const getToken = async () => {
@@ -31,12 +35,17 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Login</Text>
-      <LoginForm navigation={navigation} />
-      <RegisterForm navigation={navigation} />
-      <StatusBar style="auto" backgroundColor="orange" />
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}
+    >
+      <SafeAreaView style={styles.container}>
+        <Text>Login</Text>
+        <LoginForm navigation={navigation} />
+        <RegisterForm navigation={navigation} />
+        <StatusBar style="auto" backgroundColor="orange" />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

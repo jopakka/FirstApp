@@ -88,28 +88,25 @@ const register = async (inputs) => {
   try {
     const response = await fetch(baseUrl + 'users', fetchOptions);
     const json = await response.json();
-    return json;
+    if (response.ok) {
+      return json;
+    }
+    throw new Error(json.message);
   } catch (e) {
-    console.log('ApiHooks register', e.message);
-    return false;
+    // console.log('ApiHooks register', e.message);
+    throw new Error(e.message);
   }
 };
 
-const login = async () => {
+const login = async (inputs) => {
   const {postLogin} = useLogin();
 
-  const testUser = {
-    username: 'joonaun',
-    password: 'passu2',
-  };
-
   try {
-    const user = await postLogin(testUser);
-    await AsyncStorage.setItem('userToken', user.token);
-    setIsLoggedIn(true);
+    const user = await postLogin(inputs);
+    return user;
   } catch (e) {
-    console.error('postLogin', e.message);
-    // TODO: Inform user that something went wrong
+    // console.error('postLogin', e.message);
+    throw new Error(e.message);
   }
 };
 
