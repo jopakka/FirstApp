@@ -4,22 +4,39 @@ import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useLogin} from '../hooks/ApiHooks';
+import {baseUrl} from '../utils/variables';
 
 const Login = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
+  const {postLogin, checkToken} = useLogin();
 
   const logIn = async () => {
-    setIsLoggedIn(true);
-    await AsyncStorage.setItem('userToken', 'abc');
-    navigation.navigate('Home');
+    const testUser = {
+      username: 'joonaun',
+      password: 'passu2',
+    };
+
+    try {
+      const user = await postLogin(testUser);
+      await AsyncStorage.setItem('userToken', user.token);
+      setIsLoggedIn(true);
+    } catch (e) {
+      console.error('postLogin', e.message);
+      // TODO: Inform user that something went wrong
+    }
   };
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     console.log('token', userToken);
-    if (userToken === 'abc') {
+    if (userToken === null) return;
+
+    try {
+      await checkToken(userToken);
       setIsLoggedIn(true);
-      navigation.navigate('Home');
+    } catch (e) {
+      console.error('getToken', e.message);
     }
   };
 

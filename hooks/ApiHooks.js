@@ -36,4 +36,45 @@ const useLoadMedia = () => {
   return mediaArray;
 };
 
-export {useLoadMedia};
+const useLogin = () => {
+  const postLogin = async (userCreds) => {
+    const options = {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(userCreds),
+    };
+
+    try {
+      const response = await fetch(baseUrl + 'login', options);
+      const data = await response.json();
+      if (response.ok) {
+        return data;
+      }
+      throw new Error(data.message);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  const checkToken = async (token) => {
+    const options = {
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      const response = await fetch(baseUrl + 'users/user', options);
+      const data = await response.json();
+      if (response.ok) {
+        return data;
+      }
+      throw new Error(data.message);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  return {postLogin, checkToken};
+};
+
+export {useLoadMedia, useLogin};
