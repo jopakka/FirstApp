@@ -7,26 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLogin} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import {login} from '../hooks/ApiHooks';
 
 const Login = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
-  const {postLogin, checkToken} = useLogin();
-
-  const logIn = async () => {
-    const testUser = {
-      username: 'joonaun',
-      password: 'passu2',
-    };
-
-    try {
-      const user = await postLogin(testUser);
-      await AsyncStorage.setItem('userToken', user.token);
-      setIsLoggedIn(true);
-    } catch (e) {
-      console.error('postLogin', e.message);
-      // TODO: Inform user that something went wrong
-    }
-  };
+  const {checkToken} = useLogin();
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');

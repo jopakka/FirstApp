@@ -77,4 +77,40 @@ const useLogin = () => {
   return {postLogin, checkToken};
 };
 
-export {useLoadMedia, useLogin};
+const register = async (inputs) => {
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(inputs),
+  };
+  try {
+    const response = await fetch(baseUrl + 'users', fetchOptions);
+    const json = await response.json();
+    return json;
+  } catch (e) {
+    console.log('ApiHooks register', e.message);
+    return false;
+  }
+};
+
+const login = async () => {
+  const {postLogin} = useLogin();
+
+  const testUser = {
+    username: 'joonaun',
+    password: 'passu2',
+  };
+
+  try {
+    const user = await postLogin(testUser);
+    await AsyncStorage.setItem('userToken', user.token);
+    setIsLoggedIn(true);
+  } catch (e) {
+    console.error('postLogin', e.message);
+    // TODO: Inform user that something went wrong
+  }
+};
+
+export {useLoadMedia, useLogin, register, login};

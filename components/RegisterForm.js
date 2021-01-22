@@ -3,11 +3,19 @@ import {View, Button, Text} from 'react-native';
 import PropTypes from 'prop-types';
 import FormTextInput from './FormTextInput';
 import useSignUpForm from '../hooks/RegisterHooks';
+import {register} from '../hooks/ApiHooks';
 
 const RegisterForm = ({navigation}) => {
-  const {handleInputChange} = useSignUpForm();
+  const {inputs, handleInputChange} = useSignUpForm();
 
-  const doRegister = () => {};
+  const doRegister = async () => {
+    const serverResponse = await register(inputs);
+    if (serverResponse) {
+      Alert.alert(serverResponse.message);
+    } else {
+      Alert.alert('register failed');
+    }
+  };
 
   return (
     <View>
