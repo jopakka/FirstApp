@@ -5,6 +5,7 @@ import FormTextInput from './FormTextInput';
 import useLoginForm from '../hooks/LoginHooks';
 import {login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -13,6 +14,7 @@ const LoginForm = ({navigation}) => {
   const doLogin = async () => {
     try {
       const serverResponse = await login(inputs);
+      await AsyncStorage.setItem('userToken', serverResponse.token);
       setUser(serverResponse.user);
       setIsLoggedIn(true);
       navigation.navigate('Home');

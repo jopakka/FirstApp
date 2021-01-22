@@ -5,6 +5,7 @@ import FormTextInput from './FormTextInput';
 import useSignUpForm from '../hooks/RegisterHooks';
 import {register, login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -16,6 +17,7 @@ const RegisterForm = ({navigation}) => {
       // console.log('serverResponse', serverResponse);
       const loginResponse = await login(inputs);
       // console.log('loginResponse', loginResponse);
+      await AsyncStorage.setItem('userToken', loginResponse.token);
       setUser(loginResponse.user);
       setIsLoggedIn(true);
       navigation.navigate('Home');

@@ -4,6 +4,9 @@ import {
   SafeAreaView,
   Text,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  View,
 } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
@@ -14,7 +17,7 @@ import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 
 const Login = ({navigation}) => {
-  const {setIsLoggedIn} = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {checkToken} = useLogin();
 
   const getToken = async () => {
@@ -23,7 +26,8 @@ const Login = ({navigation}) => {
     if (userToken === null) return;
 
     try {
-      await checkToken(userToken);
+      const user = await checkToken(userToken);
+      setUser(user);
       setIsLoggedIn(true);
     } catch (e) {
       console.error('getToken', e.message);
@@ -36,10 +40,19 @@ const Login = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Login</Text>
-      <LoginForm navigation={navigation} />
-      <RegisterForm navigation={navigation} />
-      <StatusBar style="auto" backgroundColor="orange" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboard}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <Text>Login</Text>
+            <LoginForm navigation={navigation} />
+            <RegisterForm navigation={navigation} />
+            <StatusBar style="auto" backgroundColor="orange" />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -49,7 +62,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+  },
+  keyboard: {
+    flex: 1,
+    width: '100%',
+  },
+  inner: {
+    padding: '20%',
   },
 });
 
