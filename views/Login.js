@@ -35,17 +35,12 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}
-    >
-      <SafeAreaView style={styles.container}>
-        <Text>Login</Text>
-        <LoginForm navigation={navigation} />
-        <RegisterForm navigation={navigation} />
-        <StatusBar style="auto" backgroundColor="orange" />
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+    <SafeAreaView style={styles.container}>
+      <Text>Login</Text>
+      <LoginForm navigation={navigation} />
+      <RegisterForm navigation={navigation} />
+      <StatusBar style="auto" backgroundColor="orange" />
+    </SafeAreaView>
   );
 };
 

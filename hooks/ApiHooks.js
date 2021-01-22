@@ -98,6 +98,24 @@ const register = async (inputs) => {
   }
 };
 
+const getUserData = async (id, token) => {
+  const options = {
+    headers: {
+      'x-access-token': token,
+    },
+  };
+  try {
+    const response = await fetch(baseUrl + 'users/' + id);
+    const json = await response.json();
+    if (response.ok) {
+      return json;
+    }
+    throw new Error(json.message);
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
+
 const login = async (inputs) => {
   const {postLogin} = useLogin();
 
@@ -110,4 +128,4 @@ const login = async (inputs) => {
   }
 };
 
-export {useLoadMedia, useLogin, register, login};
+export {useLoadMedia, useLogin, register, login, getUserData};

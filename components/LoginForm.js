@@ -18,7 +18,7 @@ const LoginForm = ({navigation}) => {
       navigation.navigate('Home');
     } catch (e) {
       // console.error('doLogin', e.message);
-      Alert.alert('Login failed');
+      Alert.alert('Login failed', e.message);
     }
   };
 
