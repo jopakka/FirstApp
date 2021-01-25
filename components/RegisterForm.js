@@ -1,11 +1,12 @@
-import React, {useContext} from 'react';
-import {View, Button, Text, Alert} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {View, Alert, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import FormTextInput from './FormTextInput';
 import useSignUpForm from '../hooks/RegisterHooks';
-import {register, login} from '../hooks/ApiHooks';
+import {useUser, login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Input, Text, Button, Card} from 'react-native-elements';
 
 const RegisterForm = ({
   navigation,
@@ -16,8 +17,11 @@ const RegisterForm = ({
 }) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
+  const [loading, setLoading] = useState(false);
+  const {register} = useUser();
 
   const doRegister = async () => {
+    setLoading(true);
     try {
       await register(inputs);
       // console.log('serverResponse', serverResponse);
@@ -26,45 +30,60 @@ const RegisterForm = ({
       await AsyncStorage.setItem('userToken', loginResponse.token);
       setUser(loginResponse.user);
       setIsLoggedIn(true);
+      setLoading(false);
       navigation.navigate('Home');
     } catch (e) {
+      setLoading(false);
       // console.error('doRegister', e.message);
       Alert.alert('Register failed', e.message);
     }
   };
 
   return (
-    <View style={style}>
-      <Text style={titleStyle}>Register:</Text>
-      <FormTextInput
+    <Card>
+      <Text h3 h3Style={titleStyle}>
+        Register:
+      </Text>
+      <Input
         autoCapitalize="none"
         placeholder="Username"
         style={inputStyle}
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="Password"
         style={inputStyle}
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="Email"
         style={inputStyle}
         onChangeText={(txt) => handleInputChange('email', txt)}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="Full name"
         style={inputStyle}
         onChangeText={(txt) => handleInputChange('full_name', txt)}
       />
-      <Button title="Register" color={buttonColor} onPress={doRegister} />
-    </View>
+      <Button
+        title="Register"
+        color={buttonColor}
+        onPress={doRegister}
+        loading={loading}
+      />
+    </Card>
   );
 };
+
+const styles = StyleSheet.create({
+  input: {
+    marginBottom: 2,
+  },
+});
 
 RegisterForm.propTypes = {
   navigation: PropTypes.object,

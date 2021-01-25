@@ -6,8 +6,7 @@ const useLoadMedia = () => {
 
   const loadMedia = async () => {
     try {
-      const response = await fetch(baseUrl + 'media');
-      const json = await response.json();
+      const json = await doFetch(baseUrl + 'media');
       const media = await loadMediaInfo(json);
       setMediaArray(media);
     } catch (e) {
@@ -19,9 +18,7 @@ const useLoadMedia = () => {
     return await Promise.all(
       array.map(async (item) => {
         try {
-          const response = await fetch(baseUrl + 'media/' + item.file_id);
-          const json = await response.json();
-          return json;
+          return await doFetch(baseUrl + 'media/' + item.file_id);
         } catch (e) {
           console.error('List loadThumb', e.message);
         }
@@ -33,10 +30,10 @@ const useLoadMedia = () => {
     loadMedia();
   }, []);
 
-  return mediaArray;
+  return {mediaArray, loadMediaInfo};
 };
 
-const useLogin = () => {
+const useUser = () => {
   const postLogin = async (userCreds) => {
     const options = {
       method: 'post',
@@ -45,12 +42,20 @@ const useLogin = () => {
     };
 
     try {
-      const response = await fetch(baseUrl + 'login', options);
-      const data = await response.json();
-      if (response.ok) {
-        return data;
-      }
-      throw new Error(data.message);
+      return await doFetch(baseUrl + 'login', options);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  const getUserInfoById = async (id, token) => {
+    const options = {
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'users/' + id, options);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -63,39 +68,43 @@ const useLogin = () => {
       },
     };
     try {
-      const response = await fetch(baseUrl + 'users/user', options);
-      const data = await response.json();
-      if (response.ok) {
-        return data;
-      }
-      throw new Error(data.message);
+      return await doFetch(baseUrl + 'users/user', options);
     } catch (e) {
       throw new Error(e.message);
     }
   };
 
-  return {postLogin, checkToken};
+  const register = async (inputs) => {
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+    try {
+      return await doFetch(baseUrl + 'users', fetchOptions);
+    } catch (e) {
+      // console.log('ApiHooks register', e.message);
+      throw new Error(e.message);
+    }
+  };
+
+  return {postLogin, checkToken, register, getUserInfoById};
 };
 
-const register = async (inputs) => {
-  const fetchOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(inputs),
-  };
-  try {
-    const response = await fetch(baseUrl + 'users', fetchOptions);
-    const json = await response.json();
-    if (response.ok) {
-      return json;
+const useTag = () => {
+  const getFilesByTag = async (tagId, token) => {
+    const options = {
+      headers: {'x-access-token': token},
+    };
+    try {
+      return await doFetch(baseUrl + 'tags/' + tagId, options);
+    } catch (e) {
+      throw new Error(e.message);
     }
-    throw new Error(json.message);
-  } catch (e) {
-    // console.log('ApiHooks register', e.message);
-    throw new Error(e.message);
-  }
+  };
+  return {getFilesByTag};
 };
 
 const getUserData = async (id, token) => {
@@ -105,19 +114,14 @@ const getUserData = async (id, token) => {
     },
   };
   try {
-    const response = await fetch(baseUrl + 'users/' + id);
-    const json = await response.json();
-    if (response.ok) {
-      return json;
-    }
-    throw new Error(json.message);
+    return await doFetch(baseUrl + 'users/' + id, options);
   } catch (e) {
     throw new Error(e.message);
   }
 };
 
 const login = async (inputs) => {
-  const {postLogin} = useLogin();
+  const {postLogin} = useUser();
 
   try {
     const user = await postLogin(inputs);
@@ -128,4 +132,16 @@ const login = async (inputs) => {
   }
 };
 
-export {useLoadMedia, useLogin, register, login, getUserData};
+// General function for fetching
+const doFetch = async (url, options = {}) => {
+  const response = await fetch(url, options);
+  const json = await response.json();
+  if (json.error) {
+    throw new Error(json.error + ': ' + json.message);
+  } else if (!response.ok) {
+    throw new Error('doFetch failed');
+  }
+  return json;
+};
+
+export {useLoadMedia, useUser, useTag, login, getUserData};

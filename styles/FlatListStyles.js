@@ -16,7 +16,7 @@ export default StyleSheet.create({
   },
   image: {
     flex: 2,
-    width: '100%',
+    width: 120,
     height: 120,
     marginEnd: 8,
     borderRadius: 8,

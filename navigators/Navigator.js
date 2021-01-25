@@ -26,7 +26,7 @@ const TabScreen = () => {
               ? 'information-circle'
               : 'information-circle-outline';
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'list' : 'list-outline';
+            iconName = focused ? 'person' : 'person-outline';
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -59,7 +59,13 @@ const StackScreen = () => {
         </>
       ) : (
         <>
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={() => ({
+              headerShown: false,
+            })}
+          />
         </>
       )}
     </Stack.Navigator>

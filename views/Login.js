@@ -2,23 +2,24 @@ import React, {useContext, useEffect} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
-  Text,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  View,
+  Platform,
 } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useLogin} from '../hooks/ApiHooks';
+import {useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import {ScrollView} from 'react-native';
+import {View} from 'react-native';
+import {Text} from 'react-native-elements';
+import GlobalStyles from '../styles/GlobalStyles';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
-  const {checkToken} = useLogin();
+  const {checkToken} = useUser();
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -39,29 +40,15 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={GlobalStyles.droidSafeArea}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboard}
+        style={styles.container}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
-            <LoginForm
-              navigation={navigation}
-              style={styles.smallSpace}
-              titleStyle={styles.title}
-              inputStyle={styles.input}
-              buttonColor={'#32CD32'}
-            />
-            <RegisterForm
-              navigation={navigation}
-              titleStyle={styles.title}
-              inputStyle={styles.input}
-              buttonColor={'#32CD32'}
-            />
-            <StatusBar style="auto" backgroundColor="orange" />
-          </View>
-        </TouchableWithoutFeedback>
+        <Text style={styles.title}>Image app</Text>
+        <LoginForm navigation={navigation} titleStyle={styles.title} />
+        <RegisterForm navigation={navigation} titleStyle={styles.title} />
+        <StatusBar style="auto" backgroundColor="orange" />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -71,24 +58,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    padding: 8,
   },
-  smallSpace: {
-    marginBottom: 30,
-  },
-  keyboard: {
+  form: {
     flex: 1,
-    width: '100%',
-  },
-  input: {
-    marginBottom: 8,
-  },
-  inner: {
-    padding: '20%',
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

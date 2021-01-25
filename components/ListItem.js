@@ -3,25 +3,39 @@ import {TouchableOpacity, View, Text} from 'react-native';
 import FlatListStyles from '../styles/FlatListStyles';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
-import AsyncImage from './AsyncImage';
+import {
+  Avatar,
+  Button,
+  Image,
+  ListItem as RNEListItem,
+} from 'react-native-elements';
+import {StyleSheet} from 'react-native';
 
 const ListItem = ({singleMedia, navigation}) => {
   return (
-    <TouchableOpacity
-      style={FlatListStyles.item}
+    <RNEListItem
+      bottomDivider
       onPress={() => navigation.navigate('Single', {media: singleMedia})}
     >
-      <AsyncImage
-        style={FlatListStyles.image}
+      <Avatar
         source={{uri: uploadsUrl + singleMedia.thumbnails.w160}}
+        style={styles.avatar}
       />
-      <View style={FlatListStyles.textBox}>
-        <Text style={FlatListStyles.title}>{singleMedia.title}</Text>
-        <Text style={FlatListStyles.text}>{singleMedia.description}</Text>
-      </View>
-    </TouchableOpacity>
+      <RNEListItem.Content>
+        <RNEListItem.Title>{singleMedia.title}</RNEListItem.Title>
+        <RNEListItem.Subtitle>{singleMedia.description}</RNEListItem.Subtitle>
+      </RNEListItem.Content>
+      <RNEListItem.Chevron size={30} />
+    </RNEListItem>
   );
 };
+
+const styles = StyleSheet.create({
+  avatar: {
+    width: 75,
+    height: 75,
+  },
+});
 
 ListItem.propTypes = {
   singleMedia: PropTypes.object.isRequired,
