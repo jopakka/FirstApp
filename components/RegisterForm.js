@@ -6,15 +6,27 @@ import {useUser, login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Input, Text, Button, Card} from 'react-native-elements';
+import {validator, constraints} from '../utils/validator';
 
 const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
   const [loading, setLoading] = useState(false);
-  const [unOk, setUnOk] = useState(true);
+  const [usernameStatus, setUsernameStatus] = useState();
+  const [passwordStatus, setPasswordStatus] = useState();
+  const [passwordConfirm, setPasswordConfirm] = useState(true);
+  const [emailStatus, setEmailStatus] = useState(true);
   const {register, checkIfUsernameExists} = useUser();
 
   const doRegister = async () => {
+    if (usernameStatus || passwordStatus || emailStatus) {
+      checkUsername();
+      checkPassword();
+      checkEmail();
+      isPasswordSame();
+      return;
+    }
+
     setLoading(true);
     try {
       await register(inputs);
@@ -34,13 +46,32 @@ const RegisterForm = ({navigation}) => {
   };
 
   const checkUsername = async (username) => {
+    const errors = validator('username', username, constraints);
+    if (errors) {
+      setUsernameStatus(errors);
+      return;
+    }
     try {
       const response = await checkIfUsernameExists(username);
-      console.log('checkUsername', response);
-      setUnOk(response.available);
+      setUsernameStatus(response.available ? null : 'Username already exists');
     } catch (e) {
       console.error('checkUsername', e.message);
+      setUsernameStatus();
     }
+  };
+
+  const checkPassword = (password) => {
+    const errors = validator('password', password, constraints);
+    setPasswordStatus(errors);
+  };
+
+  const checkEmail = (email) => {
+    const errors = validator('email', email, constraints);
+    setEmailStatus(errors);
+  };
+
+  const isPasswordSame = (pass) => {
+    setPasswordConfirm(pass === inputs.password);
   };
 
   return (
@@ -49,7 +80,7 @@ const RegisterForm = ({navigation}) => {
       <Input
         autoCapitalize="none"
         placeholder="Username"
-        errorMessage={unOk ? null : 'Username already exists'}
+        errorMessage={usernameStatus}
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
@@ -59,13 +90,30 @@ const RegisterForm = ({navigation}) => {
       <Input
         autoCapitalize="none"
         placeholder="Password"
+        errorMessage={passwordStatus}
         onChangeText={(txt) => handleInputChange('password', txt)}
+        onEndEditing={(evt) => {
+          const text = evt.nativeEvent.text;
+          checkPassword(text);
+        }}
+        secureTextEntry={true}
+      />
+      <Input
+        autoCapitalize="none"
+        placeholder="Confirm password"
+        errorMessage={!passwordConfirm ? 'Passwords must be same' : null}
+        onChangeText={(txt) => isPasswordSame(txt)}
         secureTextEntry={true}
       />
       <Input
         autoCapitalize="none"
         placeholder="Email"
+        errorMessage={emailStatus}
         onChangeText={(txt) => handleInputChange('email', txt)}
+        onEndEditing={(evt) => {
+          const text = evt.nativeEvent.text;
+          checkEmail(text);
+        }}
       />
       <Input
         autoCapitalize="none"
