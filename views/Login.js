@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -16,10 +16,13 @@ import {ScrollView} from 'react-native';
 import {View} from 'react-native';
 import {Text} from 'react-native-elements';
 import GlobalStyles from '../styles/GlobalStyles';
+import {TouchableHighlight} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {checkToken} = useUser();
+  const [formToggle, setFormToggle] = useState(true);
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -45,9 +48,26 @@ const Login = ({navigation}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <Text style={styles.title}>Image app</Text>
-        <LoginForm navigation={navigation} titleStyle={styles.title} />
-        <RegisterForm navigation={navigation} titleStyle={styles.title} />
+        <View style={styles.title}>
+          <Text h1>Image app</Text>
+        </View>
+        <View style={styles.form}>
+          {formToggle ? (
+            <LoginForm navigation={navigation} style={styles.form} />
+          ) : (
+            <RegisterForm navigation={navigation} style={styles.form} />
+          )}
+          <TouchableOpacity
+            style={styles.toggleText}
+            onPress={() => setFormToggle(!formToggle)}
+          >
+            <Text>
+              {formToggle
+                ? 'No account yet? Register here'
+                : 'Already have an account? Login here'}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <StatusBar style="auto" backgroundColor="orange" />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -59,14 +79,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 8,
+    alignItems: 'stretch',
   },
   form: {
-    flex: 1,
+    flex: 3,
   },
   title: {
+    flex: 1,
     fontSize: 30,
     fontWeight: 'bold',
-    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  toggleText: {
+    paddingTop: 20,
+    alignItems: 'center',
   },
 });
 

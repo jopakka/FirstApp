@@ -7,7 +7,7 @@ import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Input, Text, Button, Card} from 'react-native-elements';
 
-const LoginForm = ({navigation, style, titleStyle, inputStyle}) => {
+const LoginForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useLoginForm();
   const [loading, setLoading] = useState(false);
@@ -29,20 +29,16 @@ const LoginForm = ({navigation, style, titleStyle, inputStyle}) => {
   };
 
   return (
-    <Card style={style}>
-      <Text h3 h3Style={titleStyle}>
-        Login:
-      </Text>
+    <Card>
+      <Text h4>Login:</Text>
       <Input
         placeholder="Username"
         autoCapitalize="none"
-        style={inputStyle}
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
       <Input
         autoCapitalize="none"
         placeholder="Password"
-        style={inputStyle}
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />

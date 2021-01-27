@@ -8,13 +8,7 @@ import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Input, Text, Button, Card} from 'react-native-elements';
 
-const RegisterForm = ({
-  navigation,
-  style,
-  titleStyle,
-  inputStyle,
-  buttonColor,
-}) => {
+const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
   const [loading, setLoading] = useState(false);
@@ -41,40 +35,29 @@ const RegisterForm = ({
 
   return (
     <Card>
-      <Text h3 h3Style={titleStyle}>
-        Register:
-      </Text>
+      <Text h4>Register:</Text>
       <Input
         autoCapitalize="none"
         placeholder="Username"
-        style={inputStyle}
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
       <Input
         autoCapitalize="none"
         placeholder="Password"
-        style={inputStyle}
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
       <Input
         autoCapitalize="none"
         placeholder="Email"
-        style={inputStyle}
         onChangeText={(txt) => handleInputChange('email', txt)}
       />
       <Input
         autoCapitalize="none"
         placeholder="Full name"
-        style={inputStyle}
         onChangeText={(txt) => handleInputChange('full_name', txt)}
       />
-      <Button
-        title="Register"
-        color={buttonColor}
-        onPress={doRegister}
-        loading={loading}
-      />
+      <Button title="Register" onPress={doRegister} loading={loading} />
     </Card>
   );
 };
