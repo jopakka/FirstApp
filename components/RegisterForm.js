@@ -1,7 +1,6 @@
 import React, {useContext, useState} from 'react';
-import {View, Alert, StyleSheet} from 'react-native';
+import {Alert, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
-import FormTextInput from './FormTextInput';
 import useSignUpForm from '../hooks/RegisterHooks';
 import {useUser, login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -12,7 +11,8 @@ const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
   const [loading, setLoading] = useState(false);
-  const {register} = useUser();
+  const [unOk, setUnOk] = useState(true);
+  const {register, checkIfUsernameExists} = useUser();
 
   const doRegister = async () => {
     setLoading(true);
@@ -33,13 +33,28 @@ const RegisterForm = ({navigation}) => {
     }
   };
 
+  const checkUsername = async (username) => {
+    try {
+      const response = await checkIfUsernameExists(username);
+      console.log('checkUsername', response);
+      setUnOk(response.available);
+    } catch (e) {
+      console.error('checkUsername', e.message);
+    }
+  };
+
   return (
     <Card>
       <Text h4>Register:</Text>
       <Input
         autoCapitalize="none"
         placeholder="Username"
+        errorMessage={unOk ? null : 'Username already exists'}
         onChangeText={(txt) => handleInputChange('username', txt)}
+        onEndEditing={(evt) => {
+          const text = evt.nativeEvent.text;
+          checkUsername(text);
+        }}
       />
       <Input
         autoCapitalize="none"

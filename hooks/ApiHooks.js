@@ -90,7 +90,21 @@ const useUser = () => {
     }
   };
 
-  return {postLogin, checkToken, register, getUserInfoById};
+  const checkIfUsernameExists = async (username) => {
+    try {
+      return await doFetch(baseUrl + 'users/username/' + username);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  return {
+    postLogin,
+    checkToken,
+    register,
+    getUserInfoById,
+    checkIfUsernameExists,
+  };
 };
 
 const useTag = () => {
