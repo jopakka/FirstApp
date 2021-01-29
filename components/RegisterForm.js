@@ -21,7 +21,7 @@ const RegisterForm = ({navigation}) => {
   const doRegister = async () => {
     setLoading(true);
 
-    if (usernameStatus || passwordStatus || emailStatus || passwordConfirm) {
+    if (usernameStatus || passwordStatus || emailStatus || !passwordConfirm) {
       checkUsername();
       checkPassword();
       checkEmail();
@@ -47,14 +47,14 @@ const RegisterForm = ({navigation}) => {
     }
   };
 
-  const checkUsername = async (username) => {
-    const errors = validator('username', username, constraints);
+  const checkUsername = async () => {
+    const errors = validator('username', inputs.username, constraints);
     if (errors) {
       setUsernameStatus(errors);
       return;
     }
     try {
-      const response = await checkIfUsernameExists(username);
+      const response = await checkIfUsernameExists(inputs.username);
       setUsernameStatus(response.available ? null : 'Username already exists');
     } catch (e) {
       console.error('checkUsername', e.message);
@@ -62,13 +62,13 @@ const RegisterForm = ({navigation}) => {
     }
   };
 
-  const checkPassword = (password) => {
-    const errors = validator('password', password, constraints);
+  const checkPassword = () => {
+    const errors = validator('password', inputs.password, constraints);
     setPasswordStatus(errors);
   };
 
-  const checkEmail = (email) => {
-    const errors = validator('email', email, constraints);
+  const checkEmail = () => {
+    const errors = validator('email', inputs.email, constraints);
     setEmailStatus(errors);
   };
 
@@ -86,7 +86,7 @@ const RegisterForm = ({navigation}) => {
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
-          checkUsername(text);
+          checkUsername();
         }}
       />
       <Input
@@ -96,7 +96,7 @@ const RegisterForm = ({navigation}) => {
         onChangeText={(txt) => handleInputChange('password', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
-          checkPassword(text);
+          checkPassword();
         }}
         secureTextEntry={true}
       />
@@ -114,7 +114,7 @@ const RegisterForm = ({navigation}) => {
         onChangeText={(txt) => handleInputChange('email', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
-          checkEmail(text);
+          checkEmail();
         }}
       />
       <Input
