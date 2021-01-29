@@ -15,10 +15,7 @@ const ListItem = ({singleMedia, navigation}) => {
   return (
     <RNEListItem
       bottomDivider
-      onPress={() => {
-        console.log('xD');
-        navigation.navigate('Single', {media: singleMedia});
-      }}
+      onPress={() => navigation.navigate('Single', {media: singleMedia})}
     >
       <Avatar
         source={{uri: uploadsUrl + singleMedia.thumbnails.w160}}
