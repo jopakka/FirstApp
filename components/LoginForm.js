@@ -6,11 +6,14 @@ import {login} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Input, Text, Button, Card} from 'react-native-elements';
+import {validator, constraints} from '../utils/validator';
 
 const LoginForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useLoginForm();
   const [loading, setLoading] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState();
+  const [passwordStatus, setPasswordStatus] = useState();
 
   const doLogin = async () => {
     setLoading(true);
@@ -28,6 +31,16 @@ const LoginForm = ({navigation}) => {
     }
   };
 
+  const checkUsername = (password) => {
+    const errors = validator('password', password, constraints);
+    setUsernameStatus(errors);
+  };
+
+  const checkPassword = (password) => {
+    const errors = validator('password', password, constraints);
+    setPasswordStatus(errors);
+  };
+
   return (
     <Card>
       <Text h4>Login:</Text>
@@ -35,11 +48,19 @@ const LoginForm = ({navigation}) => {
         placeholder="Username"
         autoCapitalize="none"
         onChangeText={(txt) => handleInputChange('username', txt)}
+        onEndEditing={(evt) => {
+          const text = evt.nativeEvent.text;
+          checkUsername(text);
+        }}
       />
       <Input
         autoCapitalize="none"
         placeholder="Password"
         onChangeText={(txt) => handleInputChange('password', txt)}
+        onEndEditing={(evt) => {
+          const text = evt.nativeEvent.text;
+          checkPassword(text);
+        }}
         secureTextEntry={true}
       />
       <Button title="Login" onPress={doLogin} loading={loading} />

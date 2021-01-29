@@ -15,19 +15,21 @@ const RegisterForm = ({navigation}) => {
   const [usernameStatus, setUsernameStatus] = useState();
   const [passwordStatus, setPasswordStatus] = useState();
   const [passwordConfirm, setPasswordConfirm] = useState(true);
-  const [emailStatus, setEmailStatus] = useState(true);
+  const [emailStatus, setEmailStatus] = useState();
   const {register, checkIfUsernameExists} = useUser();
 
   const doRegister = async () => {
+    setLoading(true);
+
     if (usernameStatus || passwordStatus || emailStatus) {
       checkUsername();
       checkPassword();
       checkEmail();
       isPasswordSame();
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
     try {
       await register(inputs);
       // console.log('serverResponse', serverResponse);
