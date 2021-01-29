@@ -21,7 +21,7 @@ const RegisterForm = ({navigation}) => {
   const doRegister = async () => {
     setLoading(true);
 
-    if (usernameStatus || passwordStatus || emailStatus) {
+    if (usernameStatus || passwordStatus || emailStatus || passwordConfirm) {
       checkUsername();
       checkPassword();
       checkEmail();
