@@ -43,34 +43,36 @@ const Login = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView style={GlobalStyles.droidSafeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <View style={styles.title}>
-          <Text h1>Image app</Text>
-        </View>
-        <View style={styles.form}>
-          {formToggle ? (
-            <LoginForm navigation={navigation} style={styles.form} />
-          ) : (
-            <RegisterForm navigation={navigation} style={styles.form} />
-          )}
-          <TouchableOpacity
-            style={styles.toggleText}
-            onPress={() => setFormToggle(!formToggle)}
-          >
-            <Text>
-              {formToggle
-                ? 'No account yet? Register here'
-                : 'Already have an account? Login here'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <StatusBar style="auto" backgroundColor="orange" />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <ScrollView>
+        <SafeAreaView style={GlobalStyles.droidSafeArea}>
+          <View style={styles.title}>
+            <Text h1>Image app</Text>
+          </View>
+          <View style={styles.form}>
+            {formToggle ? (
+              <LoginForm navigation={navigation} style={styles.form} />
+            ) : (
+              <RegisterForm navigation={navigation} style={styles.form} />
+            )}
+            <TouchableOpacity
+              style={styles.toggleText}
+              onPress={() => setFormToggle(!formToggle)}
+            >
+              <Text>
+                {formToggle
+                  ? 'No account yet? Register here'
+                  : 'Already have an account? Login here'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <StatusBar style="auto" backgroundColor="orange" />
+        </SafeAreaView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
