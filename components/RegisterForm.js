@@ -12,20 +12,33 @@ const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
   const [loading, setLoading] = useState(false);
-  const [usernameStatus, setUsernameStatus] = useState();
-  const [passwordStatus, setPasswordStatus] = useState();
+  const [usernameStatus, setUsernameStatus] = useState({
+    ok: false,
+    message: '',
+  });
+  const [passwordStatus, setPasswordStatus] = useState({
+    ok: false,
+    message: '',
+  });
+  const [emailStatus, setEmailStatus] = useState({ok: false, message: ''});
   const [passwordConfirm, setPasswordConfirm] = useState(true);
-  const [emailStatus, setEmailStatus] = useState();
+  const [tempPassword, setTempPassword] = useState();
   const {register, checkIfUsernameExists} = useUser();
 
   const doRegister = async () => {
     setLoading(true);
 
-    if (usernameStatus || passwordStatus || emailStatus || !passwordConfirm) {
-      checkUsername();
-      checkPassword();
-      checkEmail();
-      isPasswordSame();
+    checkUsername();
+    checkPassword();
+    isPasswordSame();
+    checkEmail();
+
+    if (
+      !usernameStatus.ok ||
+      !passwordStatus.ok ||
+      !passwordConfirm ||
+      !emailStatus.ok
+    ) {
       setLoading(false);
       return;
     }
@@ -50,30 +63,33 @@ const RegisterForm = ({navigation}) => {
   const checkUsername = async () => {
     const errors = validator('username', inputs.username, constraints);
     if (errors) {
-      setUsernameStatus(errors);
+      setUsernameStatus({ok: errors ? true : false, message: errors});
       return;
     }
     try {
       const response = await checkIfUsernameExists(inputs.username);
-      setUsernameStatus(response.available ? null : 'Username already exists');
+      setUsernameStatus({
+        ok: response.available,
+        message: response.available ? null : 'Username already exists',
+      });
     } catch (e) {
       console.error('checkUsername', e.message);
-      setUsernameStatus();
+      setUsernameStatus({ok: true, message: ''});
     }
   };
 
   const checkPassword = () => {
     const errors = validator('password', inputs.password, constraints);
-    setPasswordStatus(errors);
+    setPasswordStatus({ok: errors ? true : false, message: errors});
   };
 
   const checkEmail = () => {
     const errors = validator('email', inputs.email, constraints);
-    setEmailStatus(errors);
+    setEmailStatus({ok: errors ? true : false, message: errors});
   };
 
-  const isPasswordSame = (pass) => {
-    setPasswordConfirm(pass === inputs.password);
+  const isPasswordSame = () => {
+    setPasswordConfirm(tempPassword === inputs.password);
   };
 
   return (
@@ -82,7 +98,7 @@ const RegisterForm = ({navigation}) => {
       <Input
         autoCapitalize="none"
         placeholder="Username"
-        errorMessage={usernameStatus}
+        errorMessage={usernameStatus.message}
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
@@ -92,7 +108,7 @@ const RegisterForm = ({navigation}) => {
       <Input
         autoCapitalize="none"
         placeholder="Password"
-        errorMessage={passwordStatus}
+        errorMessage={passwordStatus.message}
         onChangeText={(txt) => handleInputChange('password', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
@@ -104,13 +120,14 @@ const RegisterForm = ({navigation}) => {
         autoCapitalize="none"
         placeholder="Confirm password"
         errorMessage={!passwordConfirm ? 'Passwords must be same' : null}
-        onChangeText={(txt) => isPasswordSame(txt)}
+        onChangeText={(txt) => setTempPassword(txt)}
+        onEndEditing={() => isPasswordSame()}
         secureTextEntry={true}
       />
       <Input
         autoCapitalize="none"
         placeholder="Email"
-        errorMessage={emailStatus}
+        errorMessage={emailStatus.message}
         onChangeText={(txt) => handleInputChange('email', txt)}
         onEndEditing={(evt) => {
           const text = evt.nativeEvent.text;
