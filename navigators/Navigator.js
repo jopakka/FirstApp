@@ -10,6 +10,7 @@ import Home from '../views/Home';
 import Profile from '../views/Profile';
 import Single from '../views/Single';
 import Login from '../views/Login';
+import Upload from '../views/Upload';
 import {MainContext} from '../contexts/MainContext';
 
 const Tab = createBottomTabNavigator();
@@ -22,11 +23,11 @@ const TabScreen = () => {
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
           if (route.name === 'Home') {
-            iconName = focused
-              ? 'information-circle'
-              : 'information-circle-outline';
+            iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'Upload') {
+            iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -38,6 +39,7 @@ const TabScreen = () => {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Upload" component={Upload} />
     </Tab.Navigator>
   );
 };

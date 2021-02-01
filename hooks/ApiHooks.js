@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {useState, useEffect} from 'react';
 import {baseUrl} from '../utils/variables';
 
@@ -158,4 +159,22 @@ const doFetch = async (url, options = {}) => {
   return json;
 };
 
-export {useLoadMedia, useUser, useTag, login, getUserData};
+const useMedia = () => {
+  const upload = async (fd, token) => {
+    const options = {
+      method: 'POST',
+      headers: {'x-access-token': token},
+      data: fd,
+      url: baseUrl + 'media',
+    };
+    try {
+      const response = await axios(options);
+      return response.data;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+  return {upload};
+};
+
+export {useLoadMedia, useUser, useTag, login, getUserData, useMedia};

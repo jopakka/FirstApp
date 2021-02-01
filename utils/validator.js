@@ -44,6 +44,15 @@ const constraints = {
       message: 'Your username must be at least 3 characters',
     },
   },
+  title: {
+    presence: {
+      message: 'Please enter a title',
+    },
+    length: {
+      minimum: 3,
+      message: 'Title must contain at least 3 characters',
+    },
+  },
 };
 
 export {validator, constraints};

@@ -28,10 +28,15 @@ const RegisterForm = ({navigation}) => {
   const doRegister = async () => {
     setLoading(true);
 
-    checkUsername();
+    await checkUsername();
     checkPassword();
     isPasswordSame();
     checkEmail();
+
+    console.log('usernameStatus', usernameStatus.ok);
+    console.log('passwordStatus', passwordStatus.ok);
+    console.log('passwordConfirm', passwordConfirm);
+    console.log('emailStatus', emailStatus.ok);
 
     if (
       !usernameStatus.ok ||
@@ -73,19 +78,18 @@ const RegisterForm = ({navigation}) => {
         message: response.available ? null : 'Username already exists',
       });
     } catch (e) {
-      console.error('checkUsername', e.message);
       setUsernameStatus({ok: true, message: ''});
     }
   };
 
   const checkPassword = () => {
     const errors = validator('password', inputs.password, constraints);
-    setPasswordStatus({ok: errors ? true : false, message: errors});
+    setPasswordStatus({ok: errors === null ? true : false, message: errors});
   };
 
   const checkEmail = () => {
     const errors = validator('email', inputs.email, constraints);
-    setEmailStatus({ok: errors ? true : false, message: errors});
+    setEmailStatus({ok: errors === null ? true : false, message: errors});
   };
 
   const isPasswordSame = () => {
