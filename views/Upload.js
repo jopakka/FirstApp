@@ -2,14 +2,14 @@ import React, {useContext, useState} from 'react';
 import {Platform, ScrollView, StyleSheet, Alert} from 'react-native';
 import {Card, Button, Input, Image} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
-import {validator, constraints} from '../utils/validator';
 import * as ImagePicker from 'expo-image-picker';
-import {useMedia} from '../hooks/ApiHooks';
+import {useMedia, useTag} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {delay} from '../utils/helpers';
 import PropTypes from 'prop-types';
 import {ActivityIndicator} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
+import {myAppTag} from '../utils/variables';
 
 const Upload = ({navigation}) => {
   const {inputs, handleInputChange, errors, reset} = useUploadForm();
@@ -17,6 +17,7 @@ const Upload = ({navigation}) => {
   const [image, setImage] = useState();
   const [loading, setLoading] = useState(false);
   const {upload} = useMedia();
+  const {postTag} = useTag();
 
   const pickImage = async (library) => {
     const options = {
@@ -37,10 +38,10 @@ const Upload = ({navigation}) => {
         result = await ImagePicker.launchCameraAsync(options);
       }
     } catch (e) {
-      console.log('pickImage', e.message);
+      console.error('pickImage', e.message);
     }
 
-    console.log('result', result);
+    // console.log('result', result);
 
     if (!result.cancelled) {
       setImage(result);
@@ -49,7 +50,6 @@ const Upload = ({navigation}) => {
 
   const doUpload = async () => {
     setLoading(true);
-    checkTitle();
 
     const filename = image.uri.split('/').pop();
     const match = /\.(\w+)$/.exec(filename);
@@ -67,10 +67,15 @@ const Upload = ({navigation}) => {
 
     try {
       const token = await AsyncStorage.getItem('userToken');
-      const res = await upload(formData, token);
-      console.log('doUpload', res);
+      const uploadResponse = await upload(formData, token);
+      // console.log('uploadResponse', uploadResponse);
 
-      if (res.file_id !== undefined) {
+      if (uploadResponse.file_id !== undefined) {
+        const tagResponse = await postTag(
+          {file_id: uploadResponse.file_id, tag: myAppTag},
+          token
+        );
+        console.log('tagResponse', tagResponse);
         await delay(1500);
         clearForm();
         setUpdate(!update);
@@ -115,18 +120,13 @@ const Upload = ({navigation}) => {
     <ScrollView>
       <Card>
         <Card.Title h3>Upload an image</Card.Title>
-        <Image
-          style={styles.img}
-          source={{uri: image ? image.uri : 'http://placekitten.com/400'}}
-        />
+        <Image style={styles.img} source={{uri: image && image.uri}} />
         <Card.Divider />
         <Input
           label="Title"
           placeholder="Title (required)"
           value={inputs.title}
-          onChangeText={(txt) => {
-            handleInputChange('title', txt);
-          }}
+          onChangeText={(txt) => handleInputChange('title', txt)}
           errorMessage={errors.title}
         />
         <Input

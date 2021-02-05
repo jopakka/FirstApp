@@ -27,10 +27,7 @@ const useUploadForm = (callback) => {
     title: '',
     description: '',
   });
-  const [errors, setErrors] = useState({
-    title: null,
-    description: null,
-  });
+  const [errors, setErrors] = useState({});
 
   const handleInputChange = (name, text) => {
     console.log(name, text);
@@ -55,10 +52,7 @@ const useUploadForm = (callback) => {
       title: '',
       description: '',
     });
-    setErrors({
-      title: null,
-      description: null,
-    });
+    setErrors({});
   };
 
   return {

@@ -1,15 +1,21 @@
 import axios from 'axios';
 import {useState, useEffect, useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
-import {baseUrl} from '../utils/variables';
+import {baseUrl, myAppTag} from '../utils/variables';
 
 const useLoadMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
 
-  const loadMedia = async () => {
+  const loadMedia = async (all = false) => {
     try {
-      const json = await doFetch(baseUrl + 'media');
+      let json = null;
+      if (all) {
+        json = await doFetch(baseUrl + 'media');
+      } else {
+        json = await doFetch(baseUrl + 'tags/' + myAppTag);
+        json = json.reverse();
+      }
       const media = await loadMediaInfo(json);
       setMediaArray(media);
     } catch (e) {
@@ -111,17 +117,31 @@ const useUser = () => {
 };
 
 const useTag = () => {
-  const getFilesByTag = async (tagId, token) => {
+  const getFilesByTag = async (tag, token) => {
     const options = {
       headers: {'x-access-token': token},
     };
     try {
-      return await doFetch(baseUrl + 'tags/' + tagId, options);
+      return await doFetch(baseUrl + 'tags/' + tag, options);
     } catch (e) {
       throw new Error(e.message);
     }
   };
-  return {getFilesByTag};
+
+  const postTag = async (inputs, token) => {
+    const options = {
+      method: 'post',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify(inputs),
+    };
+    try {
+      return await doFetch(baseUrl + 'tags', options);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  return {getFilesByTag, postTag};
 };
 
 const getUserData = async (id, token) => {
