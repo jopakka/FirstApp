@@ -1,24 +1,22 @@
-import React, {useState} from 'react';
-import {Platform, ScrollView, StyleSheet} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Platform, ScrollView, StyleSheet, Alert} from 'react-native';
 import {Card, Button, Input, Image} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
 import {validator, constraints} from '../utils/validator';
 import * as ImagePicker from 'expo-image-picker';
-import {Alert} from 'react-native';
 import {useMedia} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {delay} from '../utils/helpers';
+import PropTypes from 'prop-types';
+import {ActivityIndicator} from 'react-native';
+import {MainContext} from '../contexts/MainContext';
 
-const Upload = () => {
-  const {inputs, handleInputChange} = useUploadForm();
-  const [titleStatus, setTitleStatus] = useState();
+const Upload = ({navigation}) => {
+  const {inputs, handleInputChange, errors, reset} = useUploadForm();
+  const {update, setUpdate} = useContext(MainContext);
   const [image, setImage] = useState();
   const [loading, setLoading] = useState(false);
   const {upload} = useMedia();
-
-  const checkTitle = () => {
-    const errors = validator('title', inputs.title, constraints);
-    setTitleStatus(errors);
-  };
 
   const pickImage = async (library) => {
     const options = {
@@ -53,33 +51,42 @@ const Upload = () => {
     setLoading(true);
     checkTitle();
 
-    if (!image) {
-      Alert.alert('Image missing');
-      setLoading(false);
-      return;
-    } else if (titleStatus) {
-      setLoading(false);
-      return;
-    }
+    const filename = image.uri.split('/').pop();
+    const match = /\.(\w+)$/.exec(filename);
+    let type = match ? `${image.type}/${match.pop()}` : image.type;
+    if (type === 'image/jpg') type = 'image/jpeg';
 
     const formData = new FormData();
     formData.append('title', inputs.title);
     formData.append('description', inputs.description);
     formData.append('file', {
       uri: image.uri,
-      name: 'filename',
-      type: 'image/jpeg',
+      name: filename,
+      type: type,
     });
 
     try {
       const token = await AsyncStorage.getItem('userToken');
       const res = await upload(formData, token);
       console.log('doUpload', res);
-    } catch (e) {
-      // console.error('doUpload', e.message);
-    }
 
-    setLoading(false);
+      if (res.file_id !== undefined) {
+        await delay(1500);
+        clearForm();
+        setUpdate(!update);
+        navigation.navigate('Home');
+      }
+    } catch (e) {
+      console.error('doUpload', e.message);
+      Alert.alert('Upload failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearForm = () => {
+    setImage(null);
+    reset();
   };
 
   const askCamera = async () => {
@@ -116,18 +123,38 @@ const Upload = () => {
         <Input
           label="Title"
           placeholder="Title (required)"
-          onChangeText={(txt) => handleInputChange('title', txt)}
-          onEndEditing={() => checkTitle()}
-          errorMessage={titleStatus}
+          value={inputs.title}
+          onChangeText={(txt) => {
+            handleInputChange('title', txt);
+          }}
+          errorMessage={errors.title}
         />
         <Input
           label="Description"
           placeholder="Description (optional)"
+          value={inputs.description}
           onChangeText={(txt) => handleInputChange('description', txt)}
+          errorMessage={errors.description}
         />
         <Button title="Select an image" onPress={() => pickImage(true)} />
         <Button title="Take an image" onPress={() => pickImage(false)} />
-        <Button title="Upload" onPress={doUpload} loading={loading} />
+        {loading && <ActivityIndicator size="large" color="blue" />}
+        <Button
+          title="Upload"
+          onPress={doUpload}
+          disabled={
+            errors.title !== null ||
+            errors.description !== null ||
+            image === null
+          }
+        />
+        <Button
+          title="Reset form"
+          onPress={() => {
+            clearForm();
+            console.log('errors', errors.title, errors.description, image);
+          }}
+        />
       </Card>
     </ScrollView>
   );
@@ -139,5 +166,9 @@ const styles = StyleSheet.create({
     aspectRatio: 4 / 3,
   },
 });
+
+Upload.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default Upload;

@@ -12,6 +12,8 @@ import Single from '../views/Single';
 import Login from '../views/Login';
 import Upload from '../views/Upload';
 import {MainContext} from '../contexts/MainContext';
+import {Button} from 'react-native';
+import {Alert} from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -45,7 +47,7 @@ const TabScreen = () => {
 };
 
 const StackScreen = () => {
-  const {isLoggedIn} = useContext(MainContext);
+  const {isLoggedIn, update, setUpdate} = useContext(MainContext);
   return (
     <Stack.Navigator>
       {isLoggedIn ? (

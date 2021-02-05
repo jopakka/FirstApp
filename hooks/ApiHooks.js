@@ -1,9 +1,11 @@
 import axios from 'axios';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
+import {MainContext} from '../contexts/MainContext';
 import {baseUrl} from '../utils/variables';
 
 const useLoadMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
+  const {update} = useContext(MainContext);
 
   const loadMedia = async () => {
     try {
@@ -29,7 +31,7 @@ const useLoadMedia = () => {
 
   useEffect(() => {
     loadMedia();
-  }, []);
+  }, [update]);
 
   return {mediaArray, loadMediaInfo};
 };
