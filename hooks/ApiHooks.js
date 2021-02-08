@@ -199,4 +199,44 @@ const useMedia = () => {
   return {upload};
 };
 
-export {useLoadMedia, useUser, useTag, login, getUserData, useMedia};
+const useFavourites = () => {
+  const postFavourite = async (file_id, token) => {
+    const options = {
+      method: 'post',
+      headers: {'x-access-token': token},
+      body: {
+        file_id: file_id,
+      },
+    };
+
+    try {
+      return await doFetch(baseUrl + 'favourites', options);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  const getFavouritesByFileid = async (file_id, token) => {
+    const options = {
+      headers: {'x-access-token': token},
+    };
+
+    try {
+      return await doFetch(baseUrl + 'favourites/file/' + file_id, options);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  return {postFavourite, getFavouritesByFileid};
+};
+
+export {
+  useLoadMedia,
+  useUser,
+  useTag,
+  login,
+  getUserData,
+  useMedia,
+  useFavourites,
+};

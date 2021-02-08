@@ -16,7 +16,6 @@ import {ScrollView} from 'react-native';
 import {View} from 'react-native';
 import {Text} from 'react-native-elements';
 import GlobalStyles from '../styles/GlobalStyles';
-import {TouchableHighlight} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 
 const Login = ({navigation}) => {
@@ -34,7 +33,7 @@ const Login = ({navigation}) => {
       setUser(user);
       setIsLoggedIn(true);
     } catch (e) {
-      console.error('getToken', e.message);
+      console.log('Token not valid');
     }
   };
 

@@ -7,6 +7,7 @@ import {Card, Text} from 'react-native-elements';
 import {uploadsUrl} from '../utils/variables';
 import {useTag, useLoadMedia} from '../hooks/ApiHooks';
 import {ActivityIndicator} from 'react-native';
+import {ScrollView} from 'react-native';
 
 const Profile = ({navigation}) => {
   const {setIsLoggedIn, user} = useContext(MainContext);
@@ -40,29 +41,31 @@ const Profile = ({navigation}) => {
   }, []);
 
   return (
-    <Card>
-      <Card.Image
-        // Profile pic here
-        source={{uri: avatarUrl}}
-        style={styles.image}
-        PlaceholderContent={<ActivityIndicator color="white" size="large" />}
-      />
-      <Card.Title>
-        <Text h2>{user.username}</Text>
-      </Card.Title>
-      <Card.FeaturedSubtitle style={{color: 'black'}}>
-        Email: {user.email}
-      </Card.FeaturedSubtitle>
-      {user.full_name ? (
+    <ScrollView>
+      <Card>
+        <Card.Image
+          // Profile pic here
+          source={{uri: avatarUrl}}
+          style={styles.image}
+          PlaceholderContent={<ActivityIndicator color="white" size="large" />}
+        />
+        <Card.Title>
+          <Text h2>{user.username}</Text>
+        </Card.Title>
         <Card.FeaturedSubtitle style={{color: 'black'}}>
-          Fullname: {user.full_name}
+          Email: {user.email}
         </Card.FeaturedSubtitle>
-      ) : (
-        <></>
-      )}
-      <Card.Divider />
-      <Button title={'Logout'} onPress={logout} />
-    </Card>
+        {user.full_name ? (
+          <Card.FeaturedSubtitle style={{color: 'black'}}>
+            Fullname: {user.full_name}
+          </Card.FeaturedSubtitle>
+        ) : (
+          <></>
+        )}
+        <Card.Divider />
+        <Button title={'Logout'} onPress={logout} />
+      </Card>
+    </ScrollView>
   );
 };
 

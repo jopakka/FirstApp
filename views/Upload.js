@@ -10,17 +10,19 @@ import PropTypes from 'prop-types';
 import {ActivityIndicator} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import {myAppTag} from '../utils/variables';
+import {Video} from 'expo-av';
 
 const Upload = ({navigation}) => {
   const {inputs, handleInputChange, errors, reset} = useUploadForm();
   const {update, setUpdate} = useContext(MainContext);
-  const [image, setImage] = useState();
+  const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const {upload} = useMedia();
   const {postTag} = useTag();
 
-  const pickImage = async (library) => {
+  const pickFile = async (library) => {
     const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       quality: 1,
     };
@@ -44,23 +46,23 @@ const Upload = ({navigation}) => {
     // console.log('result', result);
 
     if (!result.cancelled) {
-      setImage(result);
+      setFile(result);
     }
   };
 
   const doUpload = async () => {
     setLoading(true);
 
-    const filename = image.uri.split('/').pop();
+    const filename = file.uri.split('/').pop();
     const match = /\.(\w+)$/.exec(filename);
-    let type = match ? `${image.type}/${match.pop()}` : image.type;
+    let type = match ? `${file.type}/${match.pop()}` : file.type;
     if (type === 'image/jpg') type = 'image/jpeg';
 
     const formData = new FormData();
     formData.append('title', inputs.title);
     formData.append('description', inputs.description);
     formData.append('file', {
-      uri: image.uri,
+      uri: file.uri,
       name: filename,
       type: type,
     });
@@ -90,7 +92,7 @@ const Upload = ({navigation}) => {
   };
 
   const clearForm = () => {
-    setImage(null);
+    setFile(null);
     reset();
   };
 
@@ -120,7 +122,18 @@ const Upload = ({navigation}) => {
     <ScrollView>
       <Card>
         <Card.Title h3>Upload an image</Card.Title>
-        <Image style={styles.img} source={{uri: image && image.uri}} />
+        {file &&
+          (file.filetype === 'image' ? (
+            <Image style={styles.img} source={{uri: file.uri}} />
+          ) : (
+            <Video
+              source={{uri: file.uri}}
+              style={styles.img}
+              resizeMode="contain"
+              useNativeControls
+              isLooping
+            />
+          ))}
         <Card.Divider />
         <Input
           label="Title"
@@ -131,13 +144,13 @@ const Upload = ({navigation}) => {
         />
         <Input
           label="Description"
-          placeholder="Description (optional)"
+          placeholder="Description (required)"
           value={inputs.description}
           onChangeText={(txt) => handleInputChange('description', txt)}
           errorMessage={errors.description}
         />
-        <Button title="Select an image" onPress={() => pickImage(true)} />
-        <Button title="Take an image" onPress={() => pickImage(false)} />
+        <Button title="Select an file" onPress={() => pickFile(true)} />
+        <Button title="Take an image" onPress={() => pickFile(false)} />
         {loading && <ActivityIndicator size="large" color="blue" />}
         <Button
           title="Upload"
@@ -145,14 +158,14 @@ const Upload = ({navigation}) => {
           disabled={
             errors.title !== null ||
             errors.description !== null ||
-            image === null
+            file === null
           }
         />
         <Button
           title="Reset form"
           onPress={() => {
             clearForm();
-            console.log('errors', errors.title, errors.description, image);
+            console.log('errors', errors.title, errors.description, file);
           }}
         />
       </Card>
