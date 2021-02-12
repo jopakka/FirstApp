@@ -4,17 +4,17 @@ import List from '../components/List';
 import {StatusBar} from 'expo-status-bar';
 import PropTypes from 'prop-types';
 
-const Home = ({navigation}) => {
+const MyFiles = ({navigation}) => {
   return (
     <View>
-      <List navigation={navigation} />
+      <List navigation={navigation} myFilesOnly />
       <StatusBar style="auto" backgroundColor="orange" />
     </View>
   );
 };
 
-Home.propTypes = {
+MyFiles.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
 
-export default Home;
+export default MyFiles;

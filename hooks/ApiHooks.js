@@ -3,19 +3,19 @@ import {useState, useEffect, useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {baseUrl, myAppTag} from '../utils/variables';
 
-const useLoadMedia = () => {
+const useLoadMedia = (myFilesOnly, userId) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
 
-  const loadMedia = async (all = false) => {
+  const loadMedia = async () => {
     try {
-      let json = null;
-      if (all) {
-        json = await doFetch(baseUrl + 'media');
+      let json;
+      if (myFilesOnly) {
+        json = await doFetch(baseUrl + 'media/user/' + userId);
       } else {
         json = await doFetch(baseUrl + 'tags/' + myAppTag);
-        json = json.reverse();
       }
+      json = json.reverse();
       const media = await loadMediaInfo(json);
       setMediaArray(media);
     } catch (e) {
@@ -23,23 +23,23 @@ const useLoadMedia = () => {
     }
   };
 
-  const loadMediaInfo = async (array) => {
-    return await Promise.all(
-      array.map(async (item) => {
-        try {
-          return await doFetch(baseUrl + 'media/' + item.file_id);
-        } catch (e) {
-          console.error('List loadThumb', e.message);
-        }
-      })
-    );
-  };
-
   useEffect(() => {
     loadMedia();
   }, [update]);
 
   return {mediaArray, loadMediaInfo};
+};
+
+const loadMediaInfo = async (array) => {
+  return await Promise.all(
+    array.map(async (item) => {
+      try {
+        return await doFetch(baseUrl + 'media/' + item.file_id);
+      } catch (e) {
+        console.error('List loadThumb', e.message);
+      }
+    })
+  );
 };
 
 const useUser = () => {
@@ -196,7 +196,38 @@ const useMedia = () => {
       throw new Error(e.message);
     }
   };
-  return {upload};
+
+  const deleteFile = async (file_id, token) => {
+    const options = {
+      method: 'delete',
+      headers: {'x-access-token': token},
+    };
+
+    try {
+      return await doFetch(baseUrl + 'media/' + file_id, options);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  const updateFile = async (file_id, inputs, token) => {
+    const options = {
+      method: 'put',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+
+    try {
+      return await doFetch(baseUrl + 'media/' + file_id, options);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+  return {upload, deleteFile, updateFile};
 };
 
 const useFavourites = () => {

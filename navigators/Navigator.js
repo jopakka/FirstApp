@@ -11,9 +11,9 @@ import Profile from '../views/Profile';
 import Single from '../views/Single';
 import Login from '../views/Login';
 import Upload from '../views/Upload';
+import MyFiles from '../views/MyFiles';
 import {MainContext} from '../contexts/MainContext';
-import {Button} from 'react-native';
-import {Alert} from 'react-native';
+import Modify from '../views/Modify';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -30,6 +30,8 @@ const TabScreen = () => {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'Upload') {
             iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
+          } else if (route.name === 'My Files') {
+            iconName = focused ? 'images' : 'images-outline';
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -42,6 +44,7 @@ const TabScreen = () => {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Upload" component={Upload} />
+      <Tab.Screen name="My Files" component={MyFiles} />
     </Tab.Navigator>
   );
 };
@@ -60,6 +63,7 @@ const StackScreen = () => {
             })}
           />
           <Stack.Screen name="Single" component={Single} />
+          <Stack.Screen name="Modify" component={Modify} />
         </>
       ) : (
         <>

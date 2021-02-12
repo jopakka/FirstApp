@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import ListItem from './ListItem';
 import {useLoadMedia} from '../hooks/ApiHooks';
 import PropTypes from 'prop-types';
+import {MainContext} from '../contexts/MainContext';
 
-const List = ({navigation}) => {
-  const {mediaArray} = useLoadMedia();
+const List = ({navigation, myFilesOnly = false}) => {
+  const {user} = useContext(MainContext);
+  const {mediaArray} = useLoadMedia(myFilesOnly, user.user_id);
 
   return (
     <FlatList
@@ -13,7 +15,11 @@ const List = ({navigation}) => {
       data={mediaArray}
       keyExtractor={(_item, index) => index.toString()}
       renderItem={({item}) => (
-        <ListItem singleMedia={item} navigation={navigation} />
+        <ListItem
+          singleMedia={item}
+          navigation={navigation}
+          isMyFile={item.user_id === user.user_id}
+        />
       )}
     />
   );
@@ -21,6 +27,7 @@ const List = ({navigation}) => {
 
 List.propTypes = {
   navigation: PropTypes.object.isRequired,
+  myFilesOnly: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({

@@ -47,6 +47,7 @@ const Upload = ({navigation}) => {
 
     if (!result.cancelled) {
       setFile(result);
+      console.log('file', file);
     }
   };
 
@@ -77,7 +78,7 @@ const Upload = ({navigation}) => {
           {file_id: uploadResponse.file_id, tag: myAppTag},
           token
         );
-        console.log('tagResponse', tagResponse);
+        // console.log('tagResponse', tagResponse);
         await delay(1500);
         clearForm();
         setUpdate(!update);
@@ -123,7 +124,7 @@ const Upload = ({navigation}) => {
       <Card>
         <Card.Title h3>Upload an image</Card.Title>
         {file &&
-          (file.filetype === 'image' ? (
+          (file.type === 'image' ? (
             <Image style={styles.img} source={{uri: file.uri}} />
           ) : (
             <Video
@@ -151,10 +152,11 @@ const Upload = ({navigation}) => {
         />
         <Button title="Select an file" onPress={() => pickFile(true)} />
         <Button title="Take an image" onPress={() => pickFile(false)} />
-        {loading && <ActivityIndicator size="large" color="blue" />}
+        {/* {loading && <ActivityIndicator size="large" color="blue" />} */}
         <Button
           title="Upload"
           onPress={doUpload}
+          loading={loading}
           disabled={
             errors.title !== null ||
             errors.description !== null ||
